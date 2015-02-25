@@ -44,6 +44,31 @@ $(document).ready(function(){
       } else {
         $('#content #markdown_content').html(data.fileContents);
         $('#content #content_header h1').html(data.fileName);
+        $('#content #markdown_content a').each(function(index, elm) {
+          var baseURI = elm.baseURI.replace('#', ''),
+              href = elm.href;
+
+          if (elm.href.indexOf(baseURI) === 0) {
+            elm.href = '#';
+
+            $(elm).on('click', function() {
+              socket.emit('readFileByPath',
+                {name: href.replace(baseURI, ''), lastPage: data.fileName});
+            });
+          }
+        });
+        var lastPage = data.lastPage;
+        if (lastPage) {
+          $('#lastPage a').html(lastPage).on('click', function() {
+            $('#lastPage').hide();
+            socket.emit('readFileByPath',
+                {name: lastPage, lastPage: ''});
+          });
+          $('#lastPage').show();
+        } else {
+          $('#lastPage').hide();
+        }
+
         rawMd = data.rawMd;
         fileName = data.fileName;
         editingAllowed = true;
@@ -215,12 +240,12 @@ $(document).ready(function(){
     $(document).on('click', '#navigation a#save_folder', function(){
       createFolder();
     });
-    
+
 
     $('#navigation').submit(function(){
       createFolder();
     });
-    
+
 
     function cancelNewFolder(){
       if (creatingNewFolder){
@@ -239,10 +264,10 @@ $(document).ready(function(){
         window.setTimeout(function(){$('#notification').slideUp()}, 4000);
       });
     });
-   
+
 
   });
- 
+
 
   ///////////////////////////////////////////////////////////
   // functions for the layout

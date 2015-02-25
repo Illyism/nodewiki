@@ -115,10 +115,12 @@ for (var argn = parser.optind();
 
 // end of command line processing
 
-var app = connect();
+var projRoot = process.cwd() + '/',
+    app = connect();
+
 app.use(connect.logger('dev'));
 app.use(connect.static(__dirname + '/static'));
-app.use(connect.static(process.cwd() + '/'));
+app.use(connect.static(projRoot));
 
 app.use('/', function(req, res){
   res.end(fs.readFileSync(__dirname + '/static/index.html', 'utf-8'));
@@ -130,7 +132,7 @@ io = socketio.listen(server);
 io.set('log level', 2);
 
 io.sockets.on('connection', function (socket){
-  var currentPath = process.cwd() + '/';
+  var currentPath = projRoot;
   var dir = getDir.getDir(currentPath);
   var links = getDir.parseLinks(dir);
   var directoryDepth = 0;
@@ -156,9 +158,32 @@ io.sockets.on('connection', function (socket){
     }
   });
 
+  socket.on('readFileByPath', function(file) {
+    console.log('readFileByPath received - ' + file.name);
+
+    var index = file.name.lastIndexOf(path.sep),
+        lastPage = currentPath + file.lastPage,
+        fileName = file.name.substring(index + 1);
+
+    if (index > -1) {
+      currentPath = projRoot + file.name.substring(0, index + 1);
+    } else {
+      currentPath = projRoot;
+    }
+
+    directoryDepth = currentPath.split(path.sep).length - projRoot.split(path.sep).length;
+    refreshNavLinks();
+
+    file.name = fileName;
+    if (file.lastPage) {
+      file.lastPage = lastPage.replace(projRoot, '');
+    }
+    mdserver.sendFile(file, currentPath, socket);
+  })
+
   socket.on('disconnect', function(){
     // if a user disconnects, reinitialise variables
-    var currentPath = process.cwd() + '/';
+    var currentPath = projRoot;
     refreshDir();
     var links = getDir.parseLinks(dir);
     var directoryDepth = 0;
