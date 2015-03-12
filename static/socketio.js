@@ -31,6 +31,22 @@ $(document).ready(function(){
       }
     });
 
+    function directPathLoad(currentPath, lastPath) {
+      if (currentPath) {
+        socket.emit('readFileByPath', {name: currentPath, lastPage: lastPath});
+      }
+    }
+
+    function onPathChange() {
+      if (location.hash !== '#' && location.hash !== '') {
+        directPathLoad(location.hash.replace('#', ''), '');
+      }
+    }
+
+    window.addEventListener("hashchange", onPathChange, false);
+
+    onPathChange();
+
     socket.on('readFileReply', function(data){
       canSendReadFile = true;
       if (data.error.error == true){
@@ -52,8 +68,7 @@ $(document).ready(function(){
             elm.href = '#';
 
             $(elm).on('click', function() {
-              socket.emit('readFileByPath',
-                {name: href.replace(baseURI, ''), lastPage: data.fileName});
+              directPathLoad(href.replace(baseURI, ''), data.fileName);
             });
           }
         });
@@ -61,8 +76,7 @@ $(document).ready(function(){
         if (lastPage) {
           $('#lastPage a').html(lastPage).on('click', function() {
             $('#lastPage').hide();
-            socket.emit('readFileByPath',
-                {name: lastPage, lastPage: ''});
+            directPathLoad(lastPage, '');
           });
           $('#lastPage').show();
         } else {
