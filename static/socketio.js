@@ -271,7 +271,7 @@ $(document).ready(function(){
     var navBottom = $('#navigation').height() + offsetNav.top;
 
     if (navBottom > contentBottom){
-      $('#content').height($('#navigation').height() + 20 + 'px');
+      $('#content').css({"min-height":$('#navigation').height() + 20 + 'px'});
     }
   }
 
