@@ -3,6 +3,7 @@ $(document).ready(function(){
 
   var rawMd, fileName;
   var editingAllowed = false; //dont allow editing until something is loaded
+  var editor;
 
   var socket = io.connect();
   socket.on('connect', function(){
@@ -78,7 +79,7 @@ $(document).ready(function(){
       if (editingAllowed == false){ //if user is currently editing
         if (creatingNewFile == true){
           if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
-            socket.emit('saveFile', {name: $('#content #content_header input').val(), content: $('#content #markdown_content textarea').val()});
+            socket.emit('saveFile', {name: $('#content #content_header input').val(), content: editor.getValue()});
           } else {
             $('#notification').html('The title or the content cannot be empty. Also, the title needs to end with ".md"');
             $('#notification').slideDown('fast', function(){
@@ -86,7 +87,7 @@ $(document).ready(function(){
             });
           }
         } else {
-          socket.emit('saveFile', {name: fileName, content: $('#content #markdown_content textarea').val()});
+          socket.emit('saveFile', {name: fileName, content: editor.getValue()});
         }
       }
     });
@@ -125,7 +126,12 @@ $(document).ready(function(){
       if (editingAllowed == true){
         editingAllowed = false;
         $('#content').height('auto');
-        $('#content #markdown_content').html('<textarea>' + rawMd + '</textarea>');
+        $('#content #markdown_content').html('<div id="editor">' + rawMd + '</div>');
+        editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/markdown");
+        editor.getSession().setUseSoftTabs(true);
+        editor.getSession().setUseWrapMode(true);
       }
     });
 
