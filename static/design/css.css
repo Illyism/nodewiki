@@ -234,18 +234,14 @@ code {
   background: #242425;
 }
 #navigation #tri_buttons a {
-  display: block;
+  display: inline-block;
+  width: 33.3%;
   font-size: 12px;
   background: #121213;
-  border-right: 1px solid #000;
   color: #e5e5e5;
   text-decoration: none;
   padding: 10px;
   text-align: center;
-  margin-right: 5px;
-  -moz-transition: background 0.3s;
-  -o-transition: background 0.3s;
-  -webkit-transition: background 0.3s;
   transition: background 0.3s;
 }
 #navigation #tri_buttons a#go_back_inactive,

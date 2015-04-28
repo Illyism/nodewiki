@@ -255,10 +255,10 @@ $(document).ready(function(){
   ///////////////////////////////////////////////////////////
 
   function showButtons(show, newFile){
-    var buttons = '<a id="edit" href="#">Edit</a>\n<a id="save" href="#">Save</a>';
+    var buttons = '<a id="edit" href="#" title="Edit"><i class="fa fa-pencil"></i></a>\n<a id="save" href="#" title="Save"><i class="fa fa-save"></i></a>';
     if (show){
       if (newFile){
-        $('#edit_save_buttons').html('<a id="cancel" href="#">Cancel</a>\n<a id="save" href="#">Save</a>');
+        $('#edit_save_buttons').html('<a id="cancel" href="#" title="Cancel"><i class="fa fa-close"></i></a>\n<a id="save" href="#" title="Save"><i class="fa fa-save"></i></a>');
       } else {
         $('#edit_save_buttons').html(buttons);
       }
