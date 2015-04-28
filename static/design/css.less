@@ -22,9 +22,15 @@ code{
 #back{
   max-width: 900px;
   width: 100%;
-  margin: 80px auto;
+  margin: 20px auto;
   padding: 10px;
   overflow: hidden;
+
+
+  @media (max-width: 875px) {
+    margin: 20px auto;
+  }
+
 }
 
 #content{
@@ -33,8 +39,15 @@ code{
   width: 100%;
   background-color: #efefef;
   border-radius: 8px;
-  padding: 0 30px 30px 30px;
+  padding: 0;
   box-shadow: 0px 0px 8px 0px #494949; 
+
+  @media (max-width: 875px) {
+    float: none;
+    max-width: 100%;
+    margin: auto;
+  }
+
 
   pre{
     background: #ddd;
@@ -49,8 +62,7 @@ code{
   }
 
   #content_header{
-    margin: 0 -30px 0 -30px;
-    -webkit-border-radius: 8px 8px 0 0;
+    margin: 0;
     background: #eaeaea;
     background: -moz-linear-gradient(top, #eaeaea 0%, #dddddd 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eaeaea), color-stop(100%,#dddddd));
@@ -117,8 +129,12 @@ code{
   }
 
   #markdown_content{
-    padding-top: 20px;
     font-size: 14px;
+    padding: 20px 30px;
+    display: none;
+    &.active {
+      display: block;
+    }
 
     p{
       margin: 10px 0;
@@ -156,16 +172,17 @@ code{
   }
 
   #editor {
-    min-height: 500px;
-    width: 678px;
-    margin-left: -29px;
-    margin-top: -19px;
+    min-height: 800px;
+    width: 100%;
+    display: none;
+    &.active {
+      display: block;
+    }
   }
 
   #notification{
     display: none;
     background: yellow;
-    margin: 0 -30px 0 -30px;
     padding: 6px 20px;
     background: #eceda8;
     background: -moz-linear-gradient(top, #eceda8 0%, #dee19e 100%);
@@ -186,9 +203,17 @@ code{
   background: #242425;
   max-width: 219px;
   width: 100%;
-  float: left;
+  float: right;
   border-radius: 7px 0 0 7px;
   box-shadow: 0px 0px 0px 1px #000000;
+
+  @media (max-width: 875px) {
+    float: none;
+    margin: 20px auto;
+    display: block;
+    max-width: 100%;
+    border-radius: 7px;
+  }
 
   a.link{
     color: #fff;

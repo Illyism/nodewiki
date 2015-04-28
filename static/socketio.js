@@ -1,9 +1,9 @@
+var editor;
 
 $(document).ready(function(){
 
   var rawMd, fileName;
   var editingAllowed = false; //dont allow editing until something is loaded
-  var editor;
 
   var socket = io.connect();
   socket.on('connect', function(){
@@ -22,6 +22,8 @@ $(document).ready(function(){
         socket.emit('readFile', {name: $(a.currentTarget).text()});
         $('#navigation').children().attr('class', 'link');
         $('#content #markdown_content').html('<em>Loading...</em>');
+        $('#content #markdown_content').addClass('active');
+        killEditor();
         $('#content_header h1').html('Node Wiki');
         $(a.currentTarget).attr('class', 'selected link');
         changeContentHeight();
@@ -44,6 +46,8 @@ $(document).ready(function(){
         changeContentHeight();
       } else {
         $('#content #markdown_content').html(data.fileContents);
+        $('#content #markdown_content').addClass('active');
+        killEditor();
         $('#content #content_header h1').html(data.fileName);
         rawMd = data.rawMd;
         fileName = data.fileName;
@@ -58,6 +62,8 @@ $(document).ready(function(){
     socket.on('readFolderReply', function(data){
       canSendReadFile = true;
       $('#content #markdown_content').html('');
+      $('#content #markdown_content').addClass('active');
+      killEditor();
       changeContentHeight();
       editingAllowed = false;
       creatingNewFile = false;
@@ -67,6 +73,8 @@ $(document).ready(function(){
     $(document).on('click', '#navigation a#go_back', function(){
       socket.emit('goBackFolder');
       $('#content #markdown_content').html('');
+      $('#content #markdown_content').addClass('active');
+      killEditor();
       $('#content_header h1').html('Node Wiki');
       //editingAllowed = true;
     })
@@ -78,7 +86,7 @@ $(document).ready(function(){
     $(document).on('click', '#edit_save_buttons a#save', function(){
       if (editingAllowed == false){ //if user is currently editing
         if (creatingNewFile == true){
-          if ($('#content #content_header input').val() != '' && $('#content #markdown_content textarea').val() != ''){
+          if ($('#content #content_header input').val() != '' && editor.getValue() != ''){
             socket.emit('saveFile', {name: $('#content #content_header input').val(), content: editor.getValue()});
           } else {
             $('#notification').html('The title or the content cannot be empty. Also, the title needs to end with ".md"');
@@ -101,6 +109,9 @@ $(document).ready(function(){
         });
       } else {
         $('#content #markdown_content').html(data.fileContents);
+        $('#content #markdown_content').addClass('active');
+        killEditor();
+
         rawMd = data.rawMd;
         fileName = data.fileName;
         editingAllowed = true;
@@ -126,7 +137,10 @@ $(document).ready(function(){
       if (editingAllowed == true){
         editingAllowed = false;
         $('#content').height('auto');
-        $('#content #markdown_content').html('<div id="editor">' + rawMd + '</div>');
+        $('#content #markdown_content').html('');
+        $('#content #markdown_content').removeClass('active');
+        $('#content #editor').text(rawMd);
+        $('#content #editor').addClass('active');
         editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/markdown");
@@ -153,7 +167,17 @@ $(document).ready(function(){
       $('#navigation').children().attr('class', 'link');
       tempFile.attr('class', 'link selected');
       $('#navigation a#new_file').attr('id', 'new_file_inactive');
-      $('#content #markdown_content').html('<textarea></textarea>');
+      $('#content #markdown_content').html('');
+      $('#content #markdown_content').removeClass('active');
+
+      $('#content #editor').html('# New File');
+      $('#content #editor').addClass('active');
+      editor = ace.edit("editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.getSession().setMode("ace/mode/markdown");
+      editor.getSession().setUseSoftTabs(true);
+      editor.getSession().setUseWrapMode(true);
+
       $('#content #content_header h1').html('<form><input type="text" /></form>');
       $('#content #content_header input').focus();
       showButtons(true, true);
@@ -170,6 +194,8 @@ $(document).ready(function(){
       creatingNewFile = false;
       editingAllowed = true;
       $('#content #markdown_content').html('');
+      $('#content #markdown_content').addClass('active');
+      killEditor();
       $('#content #content_header h1').html('Node Wiki');
       $('#navigation a#new_file_inactive').attr('id', 'new_file');
       showButtons(false);
@@ -236,6 +262,9 @@ $(document).ready(function(){
         $('#navigation #tri_buttons').html('');
         socket.emit('refreshNav');
         $('#content #markdown_content').html('');
+        $('#content #markdown_content').addClass('active');
+        killEditor();
+        
       }
     }
 
@@ -279,6 +308,12 @@ $(document).ready(function(){
     if (navBottom > contentBottom){
       $('#content').css({"min-height":$('#navigation').height() + 20 + 'px'});
     }
+  }
+
+  function killEditor() {
+    $('#content #editor').html('');
+    $('#content #editor').removeClass('active');
+    if (editor && editor.destroy) editor.destroy();
   }
 
 
