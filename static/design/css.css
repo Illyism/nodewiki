@@ -1,6 +1,15 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 body {
   background: url('nodebg.jpg') repeat-x fixed top center #67311a;
   font-family: 'PT Sans', sans-serif;
+  margin: 0;
 }
 h1,
 h2,
@@ -14,19 +23,19 @@ code {
   font-family: 'PT Mono', monospace;
 }
 #back {
-  width: 900px;
+  max-width: 900px;
+  width: 100%;
   margin: 80px auto;
   padding: 10px;
   overflow: hidden;
 }
 #content {
   float: right;
-  width: 620px;
+  max-width: 620px;
+  width: 100%;
   background-color: #efefef;
-  -webkit-border-radius: 8px;
   border-radius: 8px;
   padding: 0 30px 30px 30px;
-  -webkit-box-shadow: 0px 0px 8px 0px #494949;
   box-shadow: 0px 0px 8px 0px #494949;
 }
 #content pre {
@@ -162,13 +171,11 @@ code {
 #navigation {
   margin-top: 20px;
   background: #242425;
-  width: 219px;
+  max-width: 219px;
+  width: 100%;
   float: left;
-  -webkit-box-radius: 7px 0 0 7px;
   border-radius: 7px 0 0 7px;
-  -webkit-box-shadow: 0px 0px 0px 1px #000000;
   box-shadow: 0px 0px 0px 1px #000000;
-  overflow: hidden;
 }
 #navigation a.link {
   color: #fff;
@@ -227,16 +234,14 @@ code {
   background: #242425;
 }
 #navigation #tri_buttons a {
+  display: block;
   font-size: 12px;
   background: #121213;
   border-right: 1px solid #000;
   color: #e5e5e5;
   text-decoration: none;
   padding: 10px;
-  width: 47px;
-  height: 30px;
   text-align: center;
-  float: left;
   margin-right: 5px;
   -moz-transition: background 0.3s;
   -o-transition: background 0.3s;
@@ -250,7 +255,6 @@ code {
 }
 #navigation #tri_buttons a#new_folder,
 #navigation #tri_buttons a#new_folder_inactive {
-  width: 51px;
   border-left: 1px solid #000;
   border-right: 0;
   margin-right: 0;
