@@ -2,6 +2,11 @@ var editor;
 
 $(document).ready(function(){
 
+  window.onbeforeunload = function() {
+    return "You have attempted to leave this page. Are you sure?";
+  };
+
+
   var rawMd, fileName;
   var editingAllowed = false; //dont allow editing until something is loaded
 
@@ -24,7 +29,7 @@ $(document).ready(function(){
         $('#content #markdown_content').html('<em>Loading...</em>');
         $('#content #markdown_content').addClass('active');
         killEditor();
-        $('#content_header h1').html('Node Wiki');
+        $('#content_header h1').html('Knowledge Base');
         $(a.currentTarget).attr('class', 'selected link');
         changeContentHeight();
 
@@ -75,7 +80,7 @@ $(document).ready(function(){
       $('#content #markdown_content').html('');
       $('#content #markdown_content').addClass('active');
       killEditor();
-      $('#content_header h1').html('Node Wiki');
+      $('#content_header h1').html('Knowledge Base');
       //editingAllowed = true;
     })
 
@@ -196,7 +201,7 @@ $(document).ready(function(){
       $('#content #markdown_content').html('');
       $('#content #markdown_content').addClass('active');
       killEditor();
-      $('#content #content_header h1').html('Node Wiki');
+      $('#content #content_header h1').html('Knowledge Base');
       $('#navigation a#new_file_inactive').attr('id', 'new_file');
       showButtons(false);
       changeContentHeight();
@@ -217,7 +222,7 @@ $(document).ready(function(){
         cancelNewFile();
       }
 
-      $('#content #content_header h1').html('Node Wiki');
+      $('#content #content_header h1').html('Knowledge Base');
       $('#content #markdown_content').html('Creating new folder, press enter to create the folder');
       $('#navigation').children().attr('class', 'link');
       $('#navigation #tri_buttons').before('<div id="temp_new_folder"><form><input type="text" /></form></div>');
